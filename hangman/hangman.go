@@ -2,31 +2,49 @@ package hangman
 
 import (
 	"io"
-	"strings"
 )
 
-type Game struct {
+type Session struct {
 	Input       io.Reader
 	Output, Err io.Writer
-	Word        string
-	Tally       int
 }
 
-func NewGame(in io.Reader, out, errs io.Writer) *Game {
-	return &Game{
+type Game struct {
+	Letters []string
+	Tally   int
+	Limit   int
+}
+
+func NewSession(in io.Reader, out, errs io.Writer) *Session {
+	return &Session{
 		Input:  in,
 		Output: out,
 		Err:    errs,
-		Word:   "hello",
-		Tally:  0,
+	}
+}
+
+func NewGame(letters []string) *Game {
+	return &Game{
+		Letters: letters,
+		Tally:   0,
 	}
 }
 
 func (g Game) Guess(guess string) bool {
-	return strings.Contains(g.Word, guess)
+	for _, letter := range g.Letters {
+		if guess == letter {
+			return true
+		}
+	}
+	return false
 }
 
-func Tally(g Game) (Game, error) {
+func IncreaseTally(g Game) (Game, error) {
 	g.Tally++
 	return g, nil
+}
+
+func (g Game) GameOverCheck() bool {
+	t := g.Tally
+	return t > 5
 }

@@ -6,16 +6,14 @@ import (
 	"testing"
 )
 
-func TestNewGame_CreateExpectedNewGame(t *testing.T) {
+func TestNewSession_CreateExpectedNewSession(t *testing.T) {
 	t.Parallel()
-	want := hangman.Game{
+	want := hangman.Session{
 		Input:  os.Stdin,
 		Output: os.Stdout,
 		Err:    os.Stderr,
-		Word:   "hello",
-		Tally:  0,
 	}
-	got := *hangman.NewGame(os.Stdin, os.Stdout, os.Stderr)
+	got := *hangman.NewSession(os.Stdin, os.Stdout, os.Stderr)
 	if want != got {
 		t.Errorf("want %v, got %v", want, got)
 	}
@@ -24,11 +22,8 @@ func TestNewGame_CreateExpectedNewGame(t *testing.T) {
 func TestGuess_CorrectGuess(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
-		Input:  os.Stdin,
-		Output: os.Stdout,
-		Err:    os.Stderr,
-		Word:   "hello",
-		Tally:  0,
+		Letters: []string{"h", "e", "l", "l", "o"},
+		Tally:   0,
 	}
 	want := true
 	got := game.Guess("h")
@@ -40,11 +35,8 @@ func TestGuess_CorrectGuess(t *testing.T) {
 func TestGuess_IncorrectGuess(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
-		Input:  os.Stdin,
-		Output: os.Stdout,
-		Err:    os.Stderr,
-		Word:   "hello",
-		Tally:  0,
+		Letters: []string{"h", "e", "l", "l", "o"},
+		Tally:   0,
 	}
 	want := false
 	got := game.Guess("a")
@@ -53,22 +45,32 @@ func TestGuess_IncorrectGuess(t *testing.T) {
 	}
 }
 
-func TestGuess_TallyGuesses(t *testing.T) {
+func TestIncreaseTally(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
-		Input:  os.Stdin,
-		Output: os.Stdout,
-		Err:    os.Stderr,
-		Word:   "hello",
-		Tally:  0,
+		Letters: []string{"h", "e", "l", "l", "o"},
+		Tally:   0,
 	}
 	want := 1
-	result, err := hangman.Tally(game)
+	result, err := hangman.IncreaseTally(game)
 	if err != nil {
 		t.Fatal(err)
 	}
 	got := result.Tally
 	if want != got {
 		t.Errorf("want %d, got %d", want, got)
+	}
+}
+
+func TestGameOverCheck(t *testing.T) {
+	t.Parallel()
+	game := hangman.Game{
+		Letters: []string{"h", "e", "l", "l", "o"},
+		Tally:   6,
+	}
+	want := true
+	got := game.GameOverCheck()
+	if want != got {
+		t.Errorf("want %t, got %t", want, got)
 	}
 }
