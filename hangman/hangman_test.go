@@ -68,7 +68,7 @@ func TestGameOverCheck(t *testing.T) {
 	}
 }
 
-func TestDisplayWord(t *testing.T) {
+func TestSetCurent(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -76,7 +76,28 @@ func TestDisplayWord(t *testing.T) {
 		Current: []string{"_", "_", "_", "l", "_"},
 	}
 	want := []string{"_", "_", "l", "l", "_"}
-	game.SetCurrent("l", 2)
+	err := game.SetCurrent("l", 2)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := game.Current
+	if !cmp.Equal(want, got) {
+		t.Error(cmp.Diff(want, got))
+	}
+}
+
+func TestPlayerTurn(t *testing.T) {
+	t.Parallel()
+	game := hangman.Game{
+		Letters: []string{"h", "e", "l", "l", "o"},
+		Tally:   6,
+		Current: []string{"_", "_", "_", "_", "_"},
+	}
+	want := []string{"_", "_", "l", "l", "_"}
+	err := game.PlayerTurn("l")
+	if err != nil {
+		t.Fatal(err)
+	}
 	got := game.Current
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))

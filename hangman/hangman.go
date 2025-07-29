@@ -45,6 +45,17 @@ func (g Game) GameOverCheck() bool {
 	return t > 5
 }
 
-func (g *Game) SetCurrent(letter string, index int) {
+func (g *Game) SetCurrent(letter string, index int) error {
 	g.Current[index] = letter
+	return nil
+}
+
+func (g Game) PlayerTurn(l string) error {
+	for i, letter := range g.Letters {
+		ok := Guess(l, letter)
+		if ok {
+			g.SetCurrent(l, i)
+		}
+	}
+	return nil
 }
