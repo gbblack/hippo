@@ -13,6 +13,7 @@ type Game struct {
 	Letters []string
 	Tally   int
 	Limit   int
+	Current []string
 }
 
 func NewSession(in io.Reader, out, errs io.Writer) *Session {
@@ -30,13 +31,8 @@ func NewGame(letters []string) *Game {
 	}
 }
 
-func (g Game) Guess(guess string) bool {
-	for _, letter := range g.Letters {
-		if guess == letter {
-			return true
-		}
-	}
-	return false
+func Guess(guess, letter string) bool {
+	return guess == letter
 }
 
 func IncreaseTally(g Game) (Game, error) {
@@ -47,4 +43,8 @@ func IncreaseTally(g Game) (Game, error) {
 func (g Game) GameOverCheck() bool {
 	t := g.Tally
 	return t > 5
+}
+
+func (g *Game) SetCurrent(letter string, index int) {
+	g.Current[index] = letter
 }
