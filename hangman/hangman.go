@@ -31,10 +31,6 @@ func NewGame(letters []string) *Game {
 	}
 }
 
-func Guess(guess, letter string) bool {
-	return guess == letter
-}
-
 func IncreaseTally(g Game) (Game, error) {
 	g.Tally++
 	return g, nil
@@ -52,8 +48,7 @@ func (g *Game) SetCurrent(letter string, index int) error {
 
 func (g Game) PlayerTurn(l string) error {
 	for i, letter := range g.Letters {
-		ok := Guess(l, letter)
-		if ok {
+		if l == letter {
 			g.SetCurrent(l, i)
 		}
 	}

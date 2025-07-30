@@ -20,24 +20,6 @@ func TestNewSession_CreateExpectedNewSession(t *testing.T) {
 	}
 }
 
-func TestGuess_CorrectGuess(t *testing.T) {
-	t.Parallel()
-	want := true
-	got := hangman.Guess("h", "h")
-	if want != got {
-		t.Errorf("want %t, got %t", want, got)
-	}
-}
-
-func TestGuess_IncorrectGuess(t *testing.T) {
-	t.Parallel()
-	want := false
-	got := hangman.Guess("a", "h")
-	if want != got {
-		t.Errorf("want %t, got %t", want, got)
-	}
-}
-
 func TestIncreaseTally(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
