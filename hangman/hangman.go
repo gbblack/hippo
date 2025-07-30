@@ -1,6 +1,7 @@
 package hangman
 
 import (
+	"fmt"
 	"io"
 )
 
@@ -53,4 +54,9 @@ func (g Game) PlayerTurn(l string) error {
 		}
 	}
 	return nil
+}
+
+func (s *Session) Run() {
+	stdout := io.MultiWriter(s.Output)
+	fmt.Fprintf(stdout, "Hello")
 }

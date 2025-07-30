@@ -1,10 +1,14 @@
 package hangman_test
 
 import (
-	"github.com/google/go-cmp/cmp"
+	"bytes"
 	"hangman"
+	"io"
 	"os"
+	"strings"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestNewSession_CreateExpectedNewSession(t *testing.T) {
@@ -81,6 +85,19 @@ func TestPlayerTurn(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := game.Current
+	if !cmp.Equal(want, got) {
+		t.Error(cmp.Diff(want, got))
+	}
+}
+
+func TestSessionRun(t *testing.T) {
+	t.Parallel()
+	in := strings.NewReader("")
+	out := new(bytes.Buffer)
+	session := hangman.NewSession(in, out, io.Discard)
+	session.Run()
+	want := "Hello"
+	got := out.String()
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
 	}
