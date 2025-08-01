@@ -3,6 +3,7 @@ package hangman
 import (
 	"fmt"
 	"io"
+	"strings"
 )
 
 type Session struct {
@@ -25,11 +26,24 @@ func NewSession(in io.Reader, out, errs io.Writer) *Session {
 	}
 }
 
-func NewGame(letters []string) *Game {
+func NewGame(word string) *Game {
+	letters := strings.Split(word, "")
+	word_len := len(letters)
+	current := InitializeCurrent(word_len)
 	return &Game{
 		Letters: letters,
 		Tally:   0,
+		Limit:   6,
+		Current: current,
 	}
+}
+
+func InitializeCurrent(length int) []string {
+	current := make([]string, length)
+	for i := range current {
+		current[i] = "_"
+	}
+	return current
 }
 
 func IncreaseTally(g Game) (Game, error) {

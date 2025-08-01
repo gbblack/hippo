@@ -11,6 +11,19 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
+func TestNewGame_CreateNewGame(t *testing.T) {
+	t.Parallel()
+	want := hangman.Game{
+		Letters: []string{"h", "e", "l", "l", "o"},
+		Tally:   0,
+		Limit:   6,
+		Current: []string{"_", "_", "_", "_", "_"},
+	}
+	got := *hangman.NewGame("hello")
+	if !cmp.Equal(want, got) {
+		t.Error(cmp.Diff(want, got))
+	}
+}
 func TestNewSession_CreateExpectedNewSession(t *testing.T) {
 	t.Parallel()
 	want := hangman.Session{
