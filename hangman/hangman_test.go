@@ -107,6 +107,7 @@ func TestPlayerTurn(t *testing.T) {
 		Letters: []string{"h", "e", "l", "l", "o"},
 		Tally:   6,
 		Current: []string{"_", "_", "_", "_", "_"},
+		Guessed: []string{},
 	}
 	want := []string{"_", "_", "l", "l", "_"}
 	err := game.PlayerTurn("l")
@@ -129,5 +130,31 @@ func TestSessionRun(t *testing.T) {
 	got := out.String()
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
+	}
+}
+
+func TestAlreadyGuessed(t *testing.T) {
+	t.Parallel()
+	game := hangman.Game{
+		Guessed: []string{"a", "b"},
+	}
+	want := true
+	got := game.AlreadyGuessed("a")
+	if want != got {
+		t.Errorf("want %t, got %t", want, got)
+	}
+}
+
+func TestPlayerTurn_AlreadyGuessed(t *testing.T) {
+	t.Parallel()
+	game := hangman.Game{
+		Letters: []string{"h", "e", "l", "l", "o"},
+		Tally:   6,
+		Current: []string{"_", "_", "_", "_", "_"},
+		Guessed: []string{"l"},
+	}
+	err := game.PlayerTurn("l")
+	if err == nil {
+		t.Error("want error from guessing a same letter twice")
 	}
 }

@@ -2,9 +2,11 @@ package hangman
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
+	"slices"
 	"strings"
 )
 
@@ -18,6 +20,7 @@ type Game struct {
 	Tally   int
 	Limit   int
 	Current []string
+	Guessed []string
 }
 
 func NewSession(in io.Reader, out, errs io.Writer) *Session {
@@ -63,7 +66,15 @@ func (g *Game) SetCurrent(letter string, index int) error {
 	return nil
 }
 
+func (g Game) AlreadyGuessed(l string) bool {
+	return slices.Contains(g.Guessed, l)
+}
+
 func (g Game) PlayerTurn(l string) error {
+	ok := g.AlreadyGuessed(l)
+	if ok {
+		return errors.New("you've already guessed this letter")
+	}
 	for i, letter := range g.Letters {
 		if l == letter {
 			g.SetCurrent(l, i)
