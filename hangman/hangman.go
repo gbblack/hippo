@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"slices"
 	"strings"
@@ -29,6 +30,12 @@ func NewSession(in io.Reader, out, errs io.Writer) *Session {
 		Output: out,
 		Err:    errs,
 	}
+}
+
+func WordFromSlice(s []string) string {
+	i := rand.Intn(len(s))
+	word := s[i]
+	return word
 }
 
 func NewGame(word string) *Game {

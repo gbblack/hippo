@@ -2,6 +2,7 @@ package hangman_test
 
 import (
 	"bytes"
+	"fmt"
 	"hangman"
 	"io"
 	"os"
@@ -157,4 +158,11 @@ func TestPlayerTurn_AlreadyGuessed(t *testing.T) {
 	if err == nil {
 		t.Error("want error from guessing a same letter twice")
 	}
+}
+
+func TestPickWord_GetsWordFromFile(t *testing.T) {
+	t.Parallel()
+	slice := []string{"good", "great", "grievous"}
+	got := hangman.WordFromSlice(slice)
+	fmt.Printf("chosen word: %s", got)
 }
