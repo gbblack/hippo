@@ -32,6 +32,28 @@ func NewSession(in io.Reader, out, errs io.Writer) *Session {
 	}
 }
 
+func SliceFromFile(path string) ([]string, error) {
+	f, err := os.Open(path)
+	if err != nil {
+		return []string{}, errors.New("unable to open file")
+	}
+	defer f.Close()
+
+	scanner := bufio.NewScanner(f)
+	scanner.Split(bufio.ScanWords)
+
+	words := []string{}
+	for scanner.Scan() {
+		words = append(words, scanner.Text())
+	}
+
+	if err := scanner.Err(); err != nil {
+		return []string{}, err
+	}
+
+	return words, nil
+}
+
 func WordFromSlice(s []string) string {
 	i := rand.Intn(len(s))
 	word := s[i]

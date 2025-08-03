@@ -2,7 +2,6 @@ package hangman_test
 
 import (
 	"bytes"
-	"fmt"
 	"hangman"
 	"io"
 	"os"
@@ -160,9 +159,21 @@ func TestPlayerTurn_AlreadyGuessed(t *testing.T) {
 	}
 }
 
-func TestPickWord_GetsWordFromFile(t *testing.T) {
+// func TestPickWord_GetsWordFromFile(t *testing.T) {
+// 	t.Parallel()
+// 	slice := []string{"good", "great", "grievous"}
+// 	got := hangman.WordFromSlice(slice)
+// 	fmt.Printf("chosen word: %s", got)
+// }
+
+func TestSliceFromFile(t *testing.T) {
 	t.Parallel()
-	slice := []string{"good", "great", "grievous"}
-	got := hangman.WordFromSlice(slice)
-	fmt.Printf("chosen word: %s", got)
+	want := []string{"never", "gonna", "give", "you", "up"}
+	got, err := hangman.SliceFromFile("testdata/test_words.txt")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !cmp.Equal(want, got) {
+		t.Error(cmp.Diff(want, got))
+	}
 }
