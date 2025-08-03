@@ -1,8 +1,10 @@
 package hangman
 
 import (
+	"bufio"
 	"fmt"
 	"io"
+	"os"
 	"strings"
 )
 
@@ -72,5 +74,17 @@ func (g Game) PlayerTurn(l string) error {
 
 func (s *Session) Run() {
 	stdout := io.MultiWriter(s.Output)
-	fmt.Fprintf(stdout, "Hello")
+	stderr := io.MultiWriter(s.Err)
+	input := bufio.NewReader(s.Input)
+	fmt.Fprintf(stdout, "> Please enter a word to guess \n> ")
+	contents, err := input.ReadString('\n')
+	if err != nil {
+		fmt.Fprintln(stderr, "error: ", err)
+	}
+	fmt.Fprintf(stdout, "read line: %s>", contents)
+}
+
+func Main() {
+	session := NewSession(os.Stdin, os.Stdout, os.Stderr)
+	session.Run()
 }

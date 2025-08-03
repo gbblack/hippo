@@ -9,7 +9,14 @@ import (
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
+	"github.com/rogpeppe/go-internal/testscript"
 )
+
+func TestMain(m *testing.M) {
+	testscript.Main(m, map[string]func(){
+		"hangman": hangman.Main,
+	})
+}
 
 func TestNewGame_CreateNewGame(t *testing.T) {
 	t.Parallel()
@@ -20,6 +27,15 @@ func TestNewGame_CreateNewGame(t *testing.T) {
 		Current: []string{"_", "_", "_", "_", "_"},
 	}
 	got := *hangman.NewGame("hello")
+	if !cmp.Equal(want, got) {
+		t.Error(cmp.Diff(want, got))
+	}
+}
+
+func TestInitializeCurrent_Correct(t *testing.T) {
+	t.Parallel()
+	want := []string{"_", "_", "_"}
+	got := hangman.InitializeCurrent(3)
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
 	}
@@ -109,7 +125,7 @@ func TestSessionRun(t *testing.T) {
 	out := new(bytes.Buffer)
 	session := hangman.NewSession(in, out, io.Discard)
 	session.Run()
-	want := "Hello"
+	want := "> Please enter a word to guess \n> read line: >"
 	got := out.String()
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
