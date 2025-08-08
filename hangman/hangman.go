@@ -3,18 +3,11 @@ package hangman
 import (
 	"bufio"
 	"errors"
-	"fmt"
-	"io"
 	"math/rand"
 	"os"
 	"slices"
 	"strings"
 )
-
-type Session struct {
-	Input       io.Reader
-	Output, Err io.Writer
-}
 
 type Game struct {
 	Letters []string
@@ -22,14 +15,6 @@ type Game struct {
 	Limit   int
 	Current []string
 	Guessed []string
-}
-
-func NewSession(in io.Reader, out, errs io.Writer) *Session {
-	return &Session{
-		Input:  in,
-		Output: out,
-		Err:    errs,
-	}
 }
 
 func SliceFromFile(path string) ([]string, error) {
@@ -110,21 +95,4 @@ func (g Game) PlayerTurn(l string) error {
 		}
 	}
 	return nil
-}
-
-func (s *Session) Run() {
-	stdout := io.MultiWriter(s.Output)
-	stderr := io.MultiWriter(s.Err)
-	input := bufio.NewReader(s.Input)
-	fmt.Fprintf(stdout, "> Please enter a word to guess \n> ")
-	contents, err := input.ReadString('\n')
-	if err != nil {
-		fmt.Fprintln(stderr, "error: ", err)
-	}
-	fmt.Fprintf(stdout, "read line: %s>", contents)
-}
-
-func Main() {
-	session := NewSession(os.Stdin, os.Stdout, os.Stderr)
-	session.Run()
 }
