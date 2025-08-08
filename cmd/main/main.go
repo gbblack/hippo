@@ -1,7 +1,7 @@
 package main
 
 import (
-	"shell"
+	"hippo/shell"
 )
 
 func main() {

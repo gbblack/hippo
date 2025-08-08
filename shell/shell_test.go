@@ -2,9 +2,9 @@ package shell_test
 
 import (
 	"bytes"
+	"hippo/shell"
 	"io"
 	"os"
-	"shell"
 	"strings"
 	"testing"
 

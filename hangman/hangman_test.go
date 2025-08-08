@@ -1,7 +1,7 @@
 package hangman_test
 
 import (
-	"hangman"
+	"hippo/hangman"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
