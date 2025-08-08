@@ -1,9 +1,9 @@
 package main
 
 import (
-	"hangman"
+	"shell"
 )
 
 func main() {
-	hangman.Main()
+	shell.Main()
 }
