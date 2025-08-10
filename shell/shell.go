@@ -2,9 +2,12 @@ package shell
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
 	"io"
 	"os"
+	"strings"
+	"unicode"
 )
 
 type Session struct {
@@ -24,12 +27,30 @@ func (s *Session) Run() {
 	stdout := io.MultiWriter(s.Output)
 	stderr := io.MultiWriter(s.Err)
 	input := bufio.NewReader(s.Input)
-	fmt.Fprintf(stdout, "> Please enter a word to guess \n> ")
+	fmt.Fprintf(stdout, "> Make a guess \n> ")
 	contents, err := input.ReadString('\n')
 	if err != nil {
 		fmt.Fprintln(stderr, "error: ", err)
 	}
-	fmt.Fprintf(stdout, "read line: %s>", contents)
+	guess, err := HandleUserInput(contents)
+	if err != nil {
+		fmt.Fprintln(stderr, "error: ", err)
+	}
+	fmt.Fprintf(stdout, "%c", guess)
+}
+
+func HandleUserInput(i string) (rune, error) {
+	i = strings.TrimSpace(i)
+	letters := []rune(i)
+	if len(letters) > 1 {
+		return rune(0), errors.New("input is too long")
+	}
+	guess := letters[0]
+	ok := unicode.IsLetter(guess)
+	if !ok {
+		return rune(0), errors.New("input is not a letter")
+	}
+	return guess, nil
 }
 
 func Main() {
