@@ -78,7 +78,7 @@ func TestSetCurent(t *testing.T) {
 	}
 }
 
-func TestPlayerTurn(t *testing.T) {
+func TestPlayerGuess(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -87,7 +87,7 @@ func TestPlayerTurn(t *testing.T) {
 		Guessed: []string{},
 	}
 	want := []string{"_", "_", "l", "l", "_"}
-	err := game.PlayerTurn("l")
+	err := game.PlayerGuess("l")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -109,7 +109,7 @@ func TestAlreadyGuessed(t *testing.T) {
 	}
 }
 
-func TestPlayerTurn_AlreadyGuessed(t *testing.T) {
+func TestPlayerGuess_AlreadyGuessed(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -117,7 +117,7 @@ func TestPlayerTurn_AlreadyGuessed(t *testing.T) {
 		Current: []string{"_", "_", "_", "_", "_"},
 		Guessed: []string{"l"},
 	}
-	err := game.PlayerTurn("l")
+	err := game.PlayerGuess("l")
 	if err == nil {
 		t.Error("want error from guessing a same letter twice")
 	}
@@ -137,6 +137,22 @@ func TestSliceFromFile(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if !cmp.Equal(want, got) {
+		t.Error(cmp.Diff(want, got))
+	}
+}
+
+func TestAddGuess(t *testing.T) {
+	t.Parallel()
+	game := hangman.Game{
+		Guessed: []string{},
+	}
+	want := []string{"a"}
+	err := game.AddGuess("a")
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := game.Guessed
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
 	}
