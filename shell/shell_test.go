@@ -18,7 +18,13 @@ func TestMain(m *testing.M) {
 	})
 }
 
-func TestNewSession_CreateExpectedNewSession(t *testing.T) {
+func Test(t *testing.T) {
+	t.Parallel()
+	testscript.Run(t, testscript.Params{
+		Dir: "testdata/script",
+	})
+}
+func Test_NewSession_CreateExpectedNewSession(t *testing.T) {
 	t.Parallel()
 	want := shell.Session{
 		Input:  os.Stdin,
@@ -31,20 +37,20 @@ func TestNewSession_CreateExpectedNewSession(t *testing.T) {
 	}
 }
 
-func TestSessionRun(t *testing.T) {
+func Test_Run(t *testing.T) {
 	t.Parallel()
 	in := strings.NewReader("a")
 	out := new(bytes.Buffer)
 	session := shell.NewSession(in, out, io.Discard)
 	session.Run()
-	want := "> Make a guess \n> a"
+	want := "> Pick a game \n> a"
 	got := out.String()
 	if !cmp.Equal(want, got) {
 		t.Error(cmp.Diff(want, got))
 	}
 }
 
-func TestHandleUserInput_SingleLetter(t *testing.T) {
+func Test_HandleUserInput_SingleLetter(t *testing.T) {
 	t.Parallel()
 	in := "a"
 	want := 'a'
@@ -57,7 +63,7 @@ func TestHandleUserInput_SingleLetter(t *testing.T) {
 	}
 }
 
-func TestHandleUserInput_TooManyLetter(t *testing.T) {
+func Test_HandleUserInput_TooManyLetter(t *testing.T) {
 	t.Parallel()
 	in := "abc"
 	_, err := shell.HandleUserInput(in)
@@ -66,7 +72,7 @@ func TestHandleUserInput_TooManyLetter(t *testing.T) {
 	}
 }
 
-func TestHandleUserInput_NotALetter(t *testing.T) {
+func Test_HandleUserInput_NotALetter(t *testing.T) {
 	t.Parallel()
 	in := "7"
 	_, err := shell.HandleUserInput(in)
@@ -74,3 +80,22 @@ func TestHandleUserInput_NotALetter(t *testing.T) {
 		t.Error("want error if input is not a letter")
 	}
 }
+
+// func Test_ReadWordFile_Correct(t *testing.T) {
+// 	t.Parallel()
+// 	path := t.TempDir() + "/test_words.txt"
+// 	if _, err := os.Create(path); err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	if err := os.Chmod(path, 0o000); err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	want := []string{"never", "gonna", "give", "you", "up"}
+// 	got, err := shell.ReadWordFile(path)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	if !cmp.Equal(want, got) {
+// 		t.Error(cmp.Diff(want, got))
+// 	}
+// }

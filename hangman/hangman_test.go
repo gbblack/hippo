@@ -7,7 +7,7 @@ import (
 	"github.com/google/go-cmp/cmp"
 )
 
-func TestNewGame_CreateNewGame(t *testing.T) {
+func Test_NewGame(t *testing.T) {
 	t.Parallel()
 	want := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -21,7 +21,7 @@ func TestNewGame_CreateNewGame(t *testing.T) {
 	}
 }
 
-func TestInitializeCurrent_Correct(t *testing.T) {
+func Test_InitializeCurrent_Correct(t *testing.T) {
 	t.Parallel()
 	want := []string{"_", "_", "_"}
 	got := hangman.InitializeCurrent(3)
@@ -30,7 +30,7 @@ func TestInitializeCurrent_Correct(t *testing.T) {
 	}
 }
 
-func TestIncreaseTally(t *testing.T) {
+func Test_IncreaseTally(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -47,7 +47,7 @@ func TestIncreaseTally(t *testing.T) {
 	}
 }
 
-func TestGameOverCheck(t *testing.T) {
+func Test_GameOverCheck(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -60,7 +60,7 @@ func TestGameOverCheck(t *testing.T) {
 	}
 }
 
-func TestSetCurent(t *testing.T) {
+func Test_SetCurent(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -78,7 +78,7 @@ func TestSetCurent(t *testing.T) {
 	}
 }
 
-func TestPlayerGuess(t *testing.T) {
+func Test_PlayerGuess(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -97,19 +97,7 @@ func TestPlayerGuess(t *testing.T) {
 	}
 }
 
-func TestAlreadyGuessed(t *testing.T) {
-	t.Parallel()
-	game := hangman.Game{
-		Guessed: []string{"a", "b"},
-	}
-	want := true
-	got := game.AlreadyGuessed("a")
-	if want != got {
-		t.Errorf("want %t, got %t", want, got)
-	}
-}
-
-func TestPlayerGuess_AlreadyGuessed(t *testing.T) {
+func Test_PlayerGuess_Error(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Letters: []string{"h", "e", "l", "l", "o"},
@@ -123,14 +111,19 @@ func TestPlayerGuess_AlreadyGuessed(t *testing.T) {
 	}
 }
 
-// func TestPickWord_GetsWordFromFile(t *testing.T) {
-// 	t.Parallel()
-// 	slice := []string{"good", "great", "grievous"}
-// 	got := hangman.WordFromSlice(slice)
-// 	fmt.Printf("chosen word: %s", got)
-// }
+func Test_AlreadyGuessed(t *testing.T) {
+	t.Parallel()
+	game := hangman.Game{
+		Guessed: []string{"a", "b"},
+	}
+	want := true
+	got := game.AlreadyGuessed("a")
+	if want != got {
+		t.Errorf("want %t, got %t", want, got)
+	}
+}
 
-func TestSliceFromFile(t *testing.T) {
+func Test_SliceFromFile(t *testing.T) {
 	t.Parallel()
 	want := []string{"never", "gonna", "give", "you", "up"}
 	got, err := hangman.SliceFromFile("testdata/test_words.txt")
@@ -142,7 +135,7 @@ func TestSliceFromFile(t *testing.T) {
 	}
 }
 
-func TestAddGuess(t *testing.T) {
+func Test_AddGuess(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
 		Guessed: []string{},

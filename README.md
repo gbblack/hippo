@@ -16,3 +16,5 @@
 - [ ] support multiple difficulties
 - [ ] document Setup, Use and Dev in `.md` files
 - [ ] try inline docs?
+
+How to build a binary so that i can run main as a command?

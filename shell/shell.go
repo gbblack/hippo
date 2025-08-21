@@ -6,10 +6,23 @@ import (
 	"fmt"
 	"io"
 	"os"
+	// "flag"
+	"hippo/hangman"
 	"strings"
 	"unicode"
 )
 
+/*
+you need to be able to:
+Make a new session
+TODO: Start Menu for what game to play
+TODO: Be able to select and then run a game
+TODO: Gracefully exit at any point
+TODO: Test all behaviors, happy and unhappy path
+* Create a way to intereact with terminal using terminal inputs
+? Use Doc Comments for documentation
+? Save state for these games?
+*/
 type Session struct {
 	Input       io.Reader
 	Output, Err io.Writer
@@ -27,11 +40,16 @@ func (s *Session) Run() {
 	stdout := io.MultiWriter(s.Output)
 	stderr := io.MultiWriter(s.Err)
 	input := bufio.NewReader(s.Input)
-	fmt.Fprintf(stdout, "> Make a guess \n> ")
+	fmt.Fprintf(stdout, "> Pick a game \n> ")
 	contents, err := input.ReadString('\n')
 	if err != nil {
 		fmt.Fprintln(stderr, "error: ", err)
 	}
+	contents = strings.TrimSpace(contents)
+	if contents == "hangman" {
+		s.PlayHangman()
+	}
+
 	guess, err := HandleUserInput(contents)
 	if err != nil {
 		fmt.Fprintln(stderr, "error: ", err)
@@ -53,7 +71,34 @@ func HandleUserInput(i string) (rune, error) {
 	return guess, nil
 }
 
+func (s *Session) PlayHangman() {
+
+	game := hangman.NewGame("hello")
+	fmt.Println(game)
+}
+
 func Main() {
-	session := NewSession(os.Stdin, os.Stdout, os.Stderr)
-	session.Run()
+	// session := NewSession(os.Stdin, os.Stdout, os.Stderr)
+	words, err := ReadWordFile("shell/words.txt")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(words)
+	// session.Run()
+}
+
+func ReadWordFile(pathname string) ([]string, error) {
+	f, err := os.Open(pathname)
+	if err != nil {
+		return []string{}, err
+	}
+	defer f.Close()
+	scanner := bufio.NewScanner(f)
+	scanner.Split(bufio.ScanWords)
+	var words = []string{}
+	for scanner.Scan() {
+		word := strings.TrimSpace(scanner.Text())
+		words = append(words, word)
+	}
+	return words, nil
 }
