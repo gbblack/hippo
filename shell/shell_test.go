@@ -1,14 +1,9 @@
 package shell_test
 
 import (
-	"bytes"
 	"hippo/shell"
-	"io"
 	"os"
-	"strings"
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 	"github.com/rogpeppe/go-internal/testscript"
 )
 
@@ -28,19 +23,6 @@ func TestNewSession_CreateExpectedNewSession(t *testing.T) {
 	got := *shell.NewSession(os.Stdin, os.Stdout, os.Stderr)
 	if want != got {
 		t.Errorf("want %v, got %v", want, got)
-	}
-}
-
-func TestRun(t *testing.T) {
-	t.Parallel()
-	in := strings.NewReader("a")
-	out := new(bytes.Buffer)
-	session := shell.NewSession(in, out, io.Discard)
-	session.Run()
-	want := "> Pick a game \n> a"
-	got := out.String()
-	if !cmp.Equal(want, got) {
-		t.Error(cmp.Diff(want, got))
 	}
 }
 

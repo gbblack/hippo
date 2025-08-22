@@ -1,14 +1,14 @@
 package shell
 
 import (
-	"bufio"
+	// "bufio"
 	"errors"
+	"flag"
 	"fmt"
-	"io"
-	"os"
-
-	// "flag"
 	"hippo/hangman"
+	"io"
+	"log"
+	"os"
 	"strings"
 	"unicode"
 )
@@ -37,27 +37,6 @@ func NewSession(in io.Reader, out, errs io.Writer) *Session {
 	}
 }
 
-func (s *Session) Run() {
-	stdout := io.MultiWriter(s.Output)
-	stderr := io.MultiWriter(s.Err)
-	input := bufio.NewReader(s.Input)
-	fmt.Fprintf(stdout, "> Pick a game \n> ")
-	contents, err := input.ReadString('\n')
-	if err != nil {
-		fmt.Fprintln(stderr, "error: ", err)
-	}
-	contents = strings.TrimSpace(contents)
-	if contents == "hangman" {
-		s.PlayHangman()
-	}
-
-	guess, err := HandleUserInput(contents)
-	if err != nil {
-		fmt.Fprintln(stderr, "error: ", err)
-	}
-	fmt.Fprintf(stdout, "%c", guess)
-}
-
 func HandleUserInput(i string) (rune, error) {
 	i = strings.TrimSpace(i)
 	letters := []rune(i)
@@ -73,14 +52,21 @@ func HandleUserInput(i string) (rune, error) {
 }
 
 func (s *Session) PlayHangman() {
-	_, err := hangman.ReadWordFile("shell/words.txt")
+	var wordfile string
+	flag.StringVar(&wordfile, "words_file", "hangman/words.txt", "Words file")
+	flag.Parse()
+	if _, err := os.Stat(wordfile); err != nil {
+		log.Fatalf("Could not open the words file: %s\n", err)
+	}
+	word, err := hangman.PickWord(wordfile)
 	if err != nil {
 		panic(err)
 	}
-	_ = hangman.NewGame("hello")
+	game := hangman.NewGame(word)
+	fmt.Println(game)
 }
 
 func Main() {
 	session := NewSession(os.Stdin, os.Stdout, os.Stderr)
-	session.Run()
+	session.PlayHangman()
 }

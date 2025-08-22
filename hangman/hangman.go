@@ -10,8 +10,6 @@ import (
 	"strings"
 )
 
-var wordfile = "words.txt"
-
 type Game struct {
 	Letters []string
 	Tally   int
@@ -115,7 +113,7 @@ func ReadWordFile(pathname string) ([]string, error) {
 	return words, nil
 }
 
-func PickWord() (string, error) {
+func PickWord(wordfile string) (string, error) {
 	words, err := ReadWordFile(wordfile)
 	if err != nil {
 		return "", err
