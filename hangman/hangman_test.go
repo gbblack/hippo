@@ -1,12 +1,18 @@
 package hangman_test
 
 import (
+	"github.com/google/go-cmp/cmp"
+	"github.com/rogpeppe/go-internal/testscript"
 	"hippo/hangman"
 	"testing"
-
-	"github.com/google/go-cmp/cmp"
 )
 
+func Test(t *testing.T) {
+	t.Parallel()
+	testscript.Run(t, testscript.Params{
+		Dir: "testdata",
+	})
+}
 func Test_NewGame(t *testing.T) {
 	t.Parallel()
 	want := hangman.Game{
@@ -123,18 +129,6 @@ func Test_AlreadyGuessed(t *testing.T) {
 	}
 }
 
-func Test_SliceFromFile(t *testing.T) {
-	t.Parallel()
-	want := []string{"never", "gonna", "give", "you", "up"}
-	got, err := hangman.SliceFromFile("testdata/test_words.txt")
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !cmp.Equal(want, got) {
-		t.Error(cmp.Diff(want, got))
-	}
-}
-
 func Test_AddGuess(t *testing.T) {
 	t.Parallel()
 	game := hangman.Game{
@@ -150,3 +144,20 @@ func Test_AddGuess(t *testing.T) {
 		t.Error(cmp.Diff(want, got))
 	}
 }
+
+// func Test_ReadWordFile_Correct(t *testing.T) {
+// 	t.Parallel()
+// 	path := t.TempDir() + "/test_words.txttar"
+// 	data, err := os.ReadFile(path)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	want := []string{"never", "gonna", "give", "you", "up"}
+// 	got, err := shell.ReadWordFile(path)
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
+// 	if !cmp.Equal(want, got) {
+// 		t.Error(cmp.Diff(want, got))
+// 	}
+// }

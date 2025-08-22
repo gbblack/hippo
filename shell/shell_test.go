@@ -18,12 +18,6 @@ func TestMain(m *testing.M) {
 	})
 }
 
-func Test(t *testing.T) {
-	t.Parallel()
-	testscript.Run(t, testscript.Params{
-		Dir: "testdata/script",
-	})
-}
 func Test_NewSession_CreateExpectedNewSession(t *testing.T) {
 	t.Parallel()
 	want := shell.Session{
@@ -80,22 +74,3 @@ func Test_HandleUserInput_NotALetter(t *testing.T) {
 		t.Error("want error if input is not a letter")
 	}
 }
-
-// func Test_ReadWordFile_Correct(t *testing.T) {
-// 	t.Parallel()
-// 	path := t.TempDir() + "/test_words.txt"
-// 	if _, err := os.Create(path); err != nil {
-// 		t.Fatal(err)
-// 	}
-// 	if err := os.Chmod(path, 0o000); err != nil {
-// 		t.Fatal(err)
-// 	}
-// 	want := []string{"never", "gonna", "give", "you", "up"}
-// 	got, err := shell.ReadWordFile(path)
-// 	if err != nil {
-// 		t.Fatal(err)
-// 	}
-// 	if !cmp.Equal(want, got) {
-// 		t.Error(cmp.Diff(want, got))
-// 	}
-// }

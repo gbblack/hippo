@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+
 	// "flag"
 	"hippo/hangman"
 	"strings"
@@ -72,33 +73,14 @@ func HandleUserInput(i string) (rune, error) {
 }
 
 func (s *Session) PlayHangman() {
-
 	game := hangman.NewGame("hello")
-	fmt.Println(game)
-}
-
-func Main() {
-	// session := NewSession(os.Stdin, os.Stdout, os.Stderr)
-	words, err := ReadWordFile("shell/words.txt")
+	_, err := game.ReadWordFile("shell/words.txt")
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(words)
-	// session.Run()
 }
 
-func ReadWordFile(pathname string) ([]string, error) {
-	f, err := os.Open(pathname)
-	if err != nil {
-		return []string{}, err
-	}
-	defer f.Close()
-	scanner := bufio.NewScanner(f)
-	scanner.Split(bufio.ScanWords)
-	var words = []string{}
-	for scanner.Scan() {
-		word := strings.TrimSpace(scanner.Text())
-		words = append(words, word)
-	}
-	return words, nil
+func Main() {
+	session := NewSession(os.Stdin, os.Stdout, os.Stderr)
+	session.Run()
 }

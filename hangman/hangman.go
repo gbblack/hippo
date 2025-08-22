@@ -3,6 +3,7 @@ package hangman
 import (
 	"bufio"
 	"errors"
+	"io"
 	"math/rand"
 	"os"
 	"slices"
@@ -60,28 +61,6 @@ func IncreaseTally(g Game) (Game, error) {
 	return g, nil
 }
 
-func SliceFromFile(path string) ([]string, error) {
-	f, err := os.Open(path)
-	if err != nil {
-		return []string{}, errors.New("unable to open file")
-	}
-	defer f.Close()
-
-	scanner := bufio.NewScanner(f)
-	scanner.Split(bufio.ScanWords)
-
-	words := []string{}
-	for scanner.Scan() {
-		words = append(words, scanner.Text())
-	}
-
-	if err := scanner.Err(); err != nil {
-		return []string{}, err
-	}
-
-	return words, nil
-}
-
 // WordsFromSlice return a single string element from a string slice, chose at random.
 func WordFromSlice(s []string) string {
 	i := rand.Intn(len(s))
@@ -102,4 +81,28 @@ func (g *Game) AddGuess(l string) error {
 func (g Game) GameOverCheck() bool {
 	t := g.Tally
 	return t > 5
+}
+
+func ReadWords(r io.Reader) ([]string, error) {
+	scanner := bufio.NewScanner(r)
+	scanner.Split(bufio.ScanWords)
+	var words = []string{}
+	for scanner.Scan() {
+		word := strings.TrimSpace(scanner.Text())
+		words = append(words, word)
+	}
+	return words, nil
+}
+
+func (g Game) ReadWordFile(pathname string) ([]string, error) {
+	f, err := os.Open(pathname)
+	if err != nil {
+		return []string{}, err
+	}
+	defer f.Close()
+	words, err := ReadWords(f)
+	if err != nil {
+		return []string{}, errors.New("couldn't read words")
+	}
+	return words, nil
 }
