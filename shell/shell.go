@@ -73,11 +73,11 @@ func HandleUserInput(i string) (rune, error) {
 }
 
 func (s *Session) PlayHangman() {
-	game := hangman.NewGame("hello")
-	_, err := game.ReadWordFile("shell/words.txt")
+	_, err := hangman.ReadWordFile("shell/words.txt")
 	if err != nil {
 		panic(err)
 	}
+	_ = hangman.NewGame("hello")
 }
 
 func Main() {

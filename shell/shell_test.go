@@ -18,7 +18,7 @@ func TestMain(m *testing.M) {
 	})
 }
 
-func Test_NewSession_CreateExpectedNewSession(t *testing.T) {
+func TestNewSession_CreateExpectedNewSession(t *testing.T) {
 	t.Parallel()
 	want := shell.Session{
 		Input:  os.Stdin,
@@ -31,7 +31,7 @@ func Test_NewSession_CreateExpectedNewSession(t *testing.T) {
 	}
 }
 
-func Test_Run(t *testing.T) {
+func TestRun(t *testing.T) {
 	t.Parallel()
 	in := strings.NewReader("a")
 	out := new(bytes.Buffer)
@@ -44,7 +44,7 @@ func Test_Run(t *testing.T) {
 	}
 }
 
-func Test_HandleUserInput_SingleLetter(t *testing.T) {
+func TestHandleUserInput_SingleLetter(t *testing.T) {
 	t.Parallel()
 	in := "a"
 	want := 'a'
@@ -57,7 +57,7 @@ func Test_HandleUserInput_SingleLetter(t *testing.T) {
 	}
 }
 
-func Test_HandleUserInput_TooManyLetter(t *testing.T) {
+func TestHandleUserInput_TooManyLetter(t *testing.T) {
 	t.Parallel()
 	in := "abc"
 	_, err := shell.HandleUserInput(in)
@@ -66,7 +66,7 @@ func Test_HandleUserInput_TooManyLetter(t *testing.T) {
 	}
 }
 
-func Test_HandleUserInput_NotALetter(t *testing.T) {
+func TestHandleUserInput_NotALetter(t *testing.T) {
 	t.Parallel()
 	in := "7"
 	_, err := shell.HandleUserInput(in)

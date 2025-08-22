@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+var wordfile = "words.txt"
+
 type Game struct {
 	Letters []string
 	Tally   int
@@ -62,10 +64,13 @@ func IncreaseTally(g Game) (Game, error) {
 }
 
 // WordsFromSlice return a single string element from a string slice, chose at random.
-func WordFromSlice(s []string) string {
+func WordFromSlice(s []string) (string, error) {
+	if len(s) == 0 {
+		return "", errors.New("slice is empty")
+	}
 	i := rand.Intn(len(s))
 	word := s[i]
-	return word
+	return word, nil
 }
 
 func (g *Game) SetCurrent(letter string, index int) error {
@@ -91,10 +96,13 @@ func ReadWords(r io.Reader) ([]string, error) {
 		word := strings.TrimSpace(scanner.Text())
 		words = append(words, word)
 	}
+	if err := scanner.Err(); err != nil {
+		return []string{}, err
+	}
 	return words, nil
 }
 
-func (g Game) ReadWordFile(pathname string) ([]string, error) {
+func ReadWordFile(pathname string) ([]string, error) {
 	f, err := os.Open(pathname)
 	if err != nil {
 		return []string{}, err
@@ -102,7 +110,19 @@ func (g Game) ReadWordFile(pathname string) ([]string, error) {
 	defer f.Close()
 	words, err := ReadWords(f)
 	if err != nil {
-		return []string{}, errors.New("couldn't read words")
+		return []string{}, err
 	}
 	return words, nil
+}
+
+func PickWord() (string, error) {
+	words, err := ReadWordFile(wordfile)
+	if err != nil {
+		return "", err
+	}
+	word, err := WordFromSlice(words)
+	if err != nil {
+		return "", err
+	}
+	return word, nil
 }

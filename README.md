@@ -18,3 +18,13 @@
 - [ ] try inline docs?
 
 How to build a binary so that i can run main as a command?
+
+run main:
+`go run cmd/main/main.go`
+
+see percentage of code covered:
+`go test -cover`
+To build test covereage:
+`go test -coverprofile=coverage.out`
+To see it:
+`go tool cover -html=coverage.out`
