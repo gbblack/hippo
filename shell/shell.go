@@ -16,7 +16,7 @@ import (
 /*
 you need to be able to:
 Make a new session
-TODO: Start Menu for what game to play
+? Start Menu for what game to play
 TODO: Be able to select and then run a game
 TODO: Gracefully exit at any point
 TODO: Test all behaviors, happy and unhappy path
